@@ -9,7 +9,12 @@ const getHtmlEntries = () => {
   const pagesDir = path.resolve(__dirname, '');
   const entries = {};
   const files = fs.readdirSync(pagesDir);
-  const htmlFiles = files.filter((file) => file.endsWith('.html'));
+  const htmlFiles = files.filter((file) => {
+    if (!file.endsWith('.html')) return false;
+    const name = path.basename(file, '.html');
+    // Solo build: index, 404, app-development y app-development-*
+    return name === 'index' || name === '404' || name === 'app-development' || name.startsWith('app-development-');
+  });
   htmlFiles.forEach((file) => {
     const name = path.basename(file, '.html');
     entries[name] = path.resolve(pagesDir, file);
